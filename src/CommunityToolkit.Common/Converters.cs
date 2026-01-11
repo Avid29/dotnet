@@ -16,33 +16,22 @@ public static class Converters
     /// <returns>Returns file size short string.</returns>
     public static string ToFileSizeString(long size)
     {
-        if (size < 1024)
+        const long KB = 1L << 10;
+        const long MB = 1L << 20;
+        const long GB = 1L << 30;
+        const long TB = 1L << 40;
+        const long PB = 1L << 50;
+        const long EB = 1L << 60;
+
+        return size switch
         {
-            return size.ToString("F0") + " bytes";
-        }
-        else if ((size >> 10) < 1024)
-        {
-            return (size / 1024F).ToString("F1") + " KB";
-        }
-        else if ((size >> 20) < 1024)
-        {
-            return ((size >> 10) / 1024F).ToString("F1") + " MB";
-        }
-        else if ((size >> 30) < 1024)
-        {
-            return ((size >> 20) / 1024F).ToString("F1") + " GB";
-        }
-        else if ((size >> 40) < 1024)
-        {
-            return ((size >> 30) / 1024F).ToString("F1") + " TB";
-        }
-        else if ((size >> 50) < 1024)
-        {
-            return ((size >> 40) / 1024F).ToString("F1") + " PB";
-        }
-        else
-        {
-            return ((size >> 50) / 1024F).ToString("F1") + " EB";
-        }
+            < KB => $"{size:F0} bytes",
+            < MB => $"{size / (float)KB:F1} KB",
+            < GB => $"{size / (float)MB:F1} MB",
+            < TB => $"{size / (float)GB:F1} GB",
+            < PB => $"{size / (float)TB:F1} TB",
+            < EB => $"{size / (float)PB:F1} PB",
+            _ => $"{size / (float)EB:F1} EB"
+        };
     }
 }
